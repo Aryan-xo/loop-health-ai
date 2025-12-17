@@ -5,7 +5,7 @@
 **Loop AI** is a next-generation voice assistant designed to help users navigate their hospital network effectively. It combines the power of **Google's Gemini Multimodal Live API** for natural conversation with **Twilio Voice** for seamless human escalation.
 
 ## 🚀 Live Demo
-**Try it here:** [https://loop-health-ai.vercel.app](https://loop-health-ai.vercel.app)
+**Try it here:** [https://loop-health-em26wgiwi-aryan-xos-projects.vercel.app/](https://loop-health-em26wgiwi-aryan-xos-projects.vercel.app/)
 
 *(Note: Requires microphone access. If the AI cannot help, it can escalate to a real phone call!)*
 
