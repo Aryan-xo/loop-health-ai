@@ -1,117 +1,100 @@
-# Loop AI - Intelligent Hospital Network Assistant
+# Loop AI - Smart Hospital Network Assistant 🏥🤖
 
-> **A Multimodal AI Voice Agent with Data Integration and Human Handoff.**
+![Loop AI Banner](https://img.shields.io/badge/Status-Live-success) ![Stack](https://img.shields.io/badge/Tech-React%20%7C%20Python%20%7C%20Gemini%20%7C%20Twilio-blue)
 
-## 1. Project Overview
-"Loop AI" is a production-ready Voice AI assistant designed to help employees navigate their hospital network. It solves the challenge of finding in-network hospitals by parsing a complex dataset (2000+ entries) and providing real-time, voice-based answers.
+**Loop AI** is a next-generation voice assistant designed to help users navigate their hospital network effectively. It combines the power of **Google's Gemini Multimodal Live API** for natural conversation with **Twilio Voice** for seamless human escalation.
 
-**Core Problem Solved**:
--   Employees often struggle to find which hospitals are in their insurance network.
--   Static lists (PDF/CSV) are hard to search on mobile.
--   Out-of-scope questions (e.g., "Write a poem") waste AI resources.
+## 🚀 Live Demo
+**Try it here:** [https://loop-health-ai.vercel.app](https://loop-health-ai.vercel.app)
 
-**Loop AI Solution**:
--   **Voice Interface**: Talk naturally to the AI.
--   **Intelligent Search**: Finds hospitals by City (e.g., "Bangalore") or Name (e.g., "Manipal").
--   **Guardrails**: Politely rejects unrelated queries.
--   **human Handoff**: **Escalates complex/out-of-scope issues to a human agent via live phone call.**
+*(Note: Requires microphone access. If the AI cannot help, it can escalate to a real phone call!)*
 
----
+## ✨ Key Features
 
-## 2. Key Features
+-   **🎙️ Voice-First Interface**: Real-time, low-latency voice interaction using WebSockets.
+-   **🧠 Intelligent Search**:
+    -   Finds hospitals by City (e.g., "Bangalore", "Mumbai") and Keywords.
+    -   Handles fuzzy matching and city aliases (e.g., "Bangalore" -> "Bengaluru").
+    -   embedded hospital database for instant results.
+-   **🚨 Emergency Protocol**: Immediately detects life-threatening keywords (e.g., "Heart attack") and advises calling emergency services (112) instead of searching.
+-   **📞 Human Escalation (VoIP)**:
+    -   Seamlessly transitions from AI to a **Web-to-Phone** call.
+    -   If the user asks for a human, the browser calls a real phone number via Twilio.
+-   **⚡ Modern Stack**: Built with React (Vite), TailwindCSS, and Python (FastAPI).
 
-### 🎙️ 1. Multimodal Voice Agent
--   Powered by **Google Gemini 2.0 Flash Exp (Multimodal Live API)**.
--   Real-time streaming audio (WebSocket).
--   Low-latency response (<500ms).
+## 🛠️ Architecture
 
-### 🏥 2. Smart Hospital Search
--   **Hybrid Data Architecture**: The 2000+ hospital dataset is embedded client-side for instant access.
--   **Tool Use**: The AI uses a custom `find_hospitals` tool to query the data precisely without hallucinating.
+The project is split into two parts:
 
-### 📞 3. Omnichannel Escalation (The "Wow" Factor)
--   **Web-to-Phone Bridge**: If the AI cannot help on the web, it triggers a **real phone call** to the human agent.
--   **Direct Talk (VoIP)**: The user can speak directly to the Human Agent through the browser via a WebRTC-to-PSTN bridge.
+1.  **Frontend (`/`)**:
+    -   **React + Vite**: Handles the UI, Microphone input, and Audio playback.
+    -   **Twilio Device SDK**: Manages the VoIP connection for human escalation.
+    -   **Deployment**: Vercel.
 
-### 🛡️ 4. Out-of-Scope Handling
--   Strict system instructions prevent the AI from answering non-healthcare questions.
--   Automatically triggers the escalation flow when boundaries are crossed.
+2.  **Backend (`/backend`)**:
+    -   **FastAPI (Python)**: Orchestrates the connection between the Browser, Gemini, and Twilio.
+    -   **Gemini Live API**: Processes audio input and generates audio responses.
+    -   **Deployment**: Render.
 
----
-
-## 3. Architecture
-
--   **Frontend**: React (Vite), TypeScript, TailwindCSS.
-    -   *Role*: Captures microphone, renders UI, handles local search, executes VoIP calls.
--   **Backend**: Python (FastAPI), Uvicorn.
-    -   *Role*: Token generation, TwiML (Call Routing), Phone Escalation API.
--   **Infrastructure**: Twilio (Telephony), Ngrok (Tunneling).
-
----
-
-## 4. Setup Instructions
+## 🚀 Getting Started Locally
 
 ### Prerequisites
--   Node.js (v18+)
--   Python (v3.10+)
--   Twilio Account (SID, Auth Token, Purchased Number)
+-   Node.js & npm
+-   Python 3.11+
 -   Google Gemini API Key
+-   Twilio Account (Account SID, Auth Token, API Key/Secret)
 
-### Step 1: Frontend Setup
-1.  Install dependencies:
-    ```bash
-    npm install
-    ```
-2.  Start the Web App:
-    ```bash
-    npm run dev
-    ```
-3.  Open `http://localhost:5173`.
-
-### Step 2: Backend Setup (Required for Phone Features)
-1.  Install Python dependencies:
-    ```bash
-    pip install -r backend/requirements.txt
-    ```
-2.  Start the Server:
-    ```bash
-    python3 -m uvicorn backend.twilio_app:app --port 8000
-    ```
-3.  Expose Server (in a new terminal):
-    ```bash
-    ngrok http 8000
-    ```
-
-### Step 3: Configuration (.env)
-Ensure your `.env` file has the following credentials:
-```env
-GEMINI_API_KEY=AIza...
-TWILIO_ACCOUNT_SID=AC...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=+1... (Your Purchased Twilio Number)
-TWIML_APP_SID=AP... (Created via script)
+### 1. Backend Setup
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
+Create a `.env` file in the root:
+```env
+GEMINI_API_KEY=your_key
+TWILIO_ACCOUNT_SID=your_sid
+TWILIO_AUTH_TOKEN=your_token
+TWILIO_PHONE_NUMBER=your_twilio_number
+TWIML_APP_SID=your_twiml_app_sid
+TWILIO_API_KEY_SID=your_api_key
+TWILIO_API_KEY_SECRET=your_api_secret
+```
+
+Run the server:
+```bash
+python3 -m uvicorn backend.twilio_app:app --reload --port 8000
+```
+
+### 2. Frontend Setup
+```bash
+# In the root folder
+npm install
+```
+
+Create `.env.local`:
+```env
+VITE_BACKEND_URL=http://localhost:8000
+VITE_GEMINI_API_KEY=your_gemini_key
+```
+
+Run the app:
+```bash
+npm run dev
+```
+
+## ☁️ Deployment
+
+This project is configured for **Push-to-Deploy**:
+
+-   **Backend**: Deployed on **Render** (Python 3.11).
+-   **Frontend**: Deployed on **Vercel**.
+-   **Configuration**: See `deployment_guide.md` for detailed steps.
+
+## 👨‍💻 Author
+**Made by Aryan Kumar for Loop Health**
+
 ---
-
-## 5. Usage Guide
-
-1.  **Ask a valid question**:
-    -   *"Find me eye hospitals in Bangalore."*
-    -   *Response*: AI lists the hospitals verbally and shows them on screen.
-
-2.  **Trigger Escalation (Test Mode)**:
-    -   Ask: *"Write a poem about trees."*
-    -   *Response*: "I'm sorry, I can't help with that. Escalating..."
-    -   *Action*: The browser will **call your phone**.
-    -   *Result*: You pick up and talk to the web user directly.
-
----
-
-## 6. Project Structure
--   `/App.tsx`: Main Frontend Logic (Voice UI, Tool Calling).
--   `/services/hospitalData.ts`: Embedded Hospital Database.
--   `/backend/twilio_app.py`: Backend Orchestrator (VoIP, Tokens).
-
-## 7. Deployment
-Want to put this online? See [deployment_guide.md](deployment_guide.md) for instructions on using Vercel & Render.
+*Powered by Google Gemini 2.0 Flash Exp & Twilio.*
