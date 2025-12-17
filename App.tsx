@@ -76,10 +76,11 @@ const App: React.FC = () => {
 
   // Initialize AI Client
   useEffect(() => {
-    if (!process.env.API_KEY) {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
       setError("API Key is missing. Please check your configuration.");
     }
-    aiClientRef.current = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    aiClientRef.current = new GoogleGenAI({ apiKey: apiKey || "" });
     streamerRef.current = new AudioStreamer();
 
     return () => {
