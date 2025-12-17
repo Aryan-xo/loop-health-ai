@@ -1,0 +1,7 @@
+{
+  "name": "Loop AI Hospital Assistant",
+  "description": "A voice-activated AI agent for searching hospital networks using Gemini Live API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
